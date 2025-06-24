@@ -3,10 +3,11 @@ package com.BeatrizSantos_1708891.MusicApp.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +23,12 @@ fun ListaDeMusicasScreen(
     navController: NavController,
     viewModel: MusicaViewModel
 ) {
-    val context = LocalContext.current // <--- necessário para guardar alterações
+    val context = LocalContext.current
+    val termoPesquisa = viewModel.termoPesquisa
+
+    LaunchedEffect(Unit) {
+        viewModel.carregarMusicas(context)
+    }
 
     Scaffold(
         topBar = {
@@ -34,10 +40,22 @@ fun ListaDeMusicasScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            if (viewModel.listaMusicas.isEmpty()) {
-                Text("Nenhuma música adicionada.")
+            TextField(
+                value = termoPesquisa,
+                onValueChange = { viewModel.termoPesquisa = it },
+                label = { Text("Pesquisar por título ou artista") },
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            )
+
+            val musicasFiltradas = viewModel.listaMusicas.filter {
+                it.titulo.contains(termoPesquisa, ignoreCase = true) ||
+                        it.artista.contains(termoPesquisa, ignoreCase = true)
+            }
+
+            if (musicasFiltradas.isEmpty()) {
+                Text("Nenhuma música encontrada.")
             } else {
-                viewModel.listaMusicas.forEach { musica ->
+                musicasFiltradas.forEach { musica ->
                     MusicaItem(
                         musica = musica,
                         onClick = {
@@ -45,11 +63,15 @@ fun ListaDeMusicasScreen(
                             navController.navigate("detalhes")
                         },
                         onDelete = {
-                            viewModel.removerMusica(context, musica) // <--- agora guarda a nova lista
+                            viewModel.removerMusica(context, musica)
                         },
                         onToggleFavorita = {
                             viewModel.alternarFavorita(musica)
-                            viewModel.guardarMusicas(context) // também guarda se mudar favorito
+                            viewModel.guardarMusicas(context)
+                        },
+                        onEditar = {
+                            viewModel.selecionarMusica(musica)
+                            navController.navigate("editar") // nova rota para editar
                         }
                     )
                     Divider(color = Color.LightGray)
@@ -58,11 +80,16 @@ fun ListaDeMusicasScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = { navController.navigate("menu") },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("Voltar ao Menu Principal")
+                Button(onClick = { navController.navigate("menu") }) {
+                    Text("Menu Principal")
+                }
+                Button(onClick = { navController.navigate("favoritas") }) {
+                    Text("Ver Favoritas")
+                }
             }
         }
     }
@@ -73,7 +100,8 @@ fun MusicaItem(
     musica: Musica,
     onClick: () -> Unit,
     onDelete: () -> Unit,
-    onToggleFavorita: () -> Unit
+    onToggleFavorita: () -> Unit,
+    onEditar: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -94,6 +122,14 @@ fun MusicaItem(
                 imageVector = if (musica.favorita) Icons.Filled.Star else Icons.Outlined.Star,
                 contentDescription = "Favorita",
                 tint = MaterialTheme.colorScheme.primary
+            )
+        }
+
+        IconButton(onClick = onEditar) {
+            Icon(
+                imageVector = Icons.Filled.Edit,
+                contentDescription = "Editar",
+                tint = MaterialTheme.colorScheme.secondary
             )
         }
 

@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.BeatrizSantos_1708891.MusicApp.screens.*
 import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 import com.BeatrizSantos_1708891.MusicApp.screens.MenuPrincipalScreen
-
+import com.BeatrizSantos_1708891.MusicApp.screens.ListaFavoritasScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, viewModel: MusicaViewModel) {
@@ -23,6 +23,12 @@ fun AppNavigation(navController: NavHostController, viewModel: MusicaViewModel) 
         }
         composable("detalhes") {
             DetalhesMusicaScreen(navController = navController, viewModel = viewModel)
+        }
+        composable("favoritas") {
+            ListaFavoritasScreen(navController = navController, viewModel = viewModel)
+        }
+        composable("editar") {
+            EditarMusicaScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

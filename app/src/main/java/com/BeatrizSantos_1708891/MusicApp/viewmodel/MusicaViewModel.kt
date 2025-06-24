@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 class MusicaViewModel : ViewModel() {
     private var proximoId = 1
 
+    var termoPesquisa by mutableStateOf("")
     val listaMusicas = mutableStateListOf<Musica>()
     var musicaSelecionada by mutableStateOf<Musica?>(null)
         private set
@@ -41,7 +42,7 @@ class MusicaViewModel : ViewModel() {
 
     fun removerMusica(context: Context, musica: Musica) {
         listaMusicas.remove(musica)
-        guardarMusicas(context)
+        guardarMusicas(context) // <-- guarda automaticamente após remover
     }
 
     fun selecionarMusica(musica: Musica) {
@@ -77,5 +78,21 @@ class MusicaViewModel : ViewModel() {
     fun limparSelecao() {
         musicaSelecionada = null
     }
+
+    fun editarMusica(musicaEditada: Musica) {
+        val index = listaMusicas.indexOfFirst { it.id == musicaEditada.id }
+        if (index != -1) {
+            listaMusicas[index] = musicaEditada
+        }
+    }
+
+    fun atualizarMusica(context: Context, musicaAtualizada: Musica) {
+        val index = listaMusicas.indexOfFirst { it.id == musicaAtualizada.id }
+        if (index != -1) {
+            listaMusicas[index] = musicaAtualizada
+            guardarMusicas(context) // Atualiza o DataStore com a nova lista
+        }
+    }
+
 }
 

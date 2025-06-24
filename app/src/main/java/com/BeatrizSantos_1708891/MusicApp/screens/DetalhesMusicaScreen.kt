@@ -15,6 +15,7 @@ import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 fun DetalhesMusicaScreen(
     navController: NavController,
     viewModel: MusicaViewModel
+
 ) {
     val musica = viewModel.musicaSelecionada
 
@@ -28,6 +29,7 @@ fun DetalhesMusicaScreen(
         if (musica != null) {
             Column(
                 modifier = Modifier
+
                     .padding(padding)
                     .padding(16.dp)
                     .fillMaxSize(),
@@ -38,6 +40,24 @@ fun DetalhesMusicaScreen(
                 Text("Género: ${musica.genero}")
                 Text("Ano: ${musica.ano}")
                 Text("Avaliação: ${musica.avaliacao} / 5")
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(onClick = {
+                        navController.navigate("menu")
+                    }) {
+                        Text("Menu")
+                    }
+                    Button(onClick = {
+                        navController.navigate("editar")
+                    }) {
+                        Text("Editar")
+                    }
+                }
             }
         } else {
             Box(
@@ -50,10 +70,7 @@ fun DetalhesMusicaScreen(
             }
         }
     }
-
-    // Limpar seleção assim que este ecrã for aberto
-    LaunchedEffect(Unit) {
-        viewModel.limparSelecao()
-    }
 }
+
+
 
