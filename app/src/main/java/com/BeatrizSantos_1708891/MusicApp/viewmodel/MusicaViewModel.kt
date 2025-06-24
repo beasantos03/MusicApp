@@ -5,8 +5,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.BeatrizSantos_1708891.MusicApp.data.Musica
-import com.BeatrizSantos_1708891.MusicApp.data.MusicaDataStore
-import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
+import com.BeatrizSantos_1708891.MusicApp.data.MusicaDataStore  // <--- AQUI
 import kotlinx.coroutines.launch
 
 class MusicaViewModel : ViewModel() {
@@ -40,8 +39,9 @@ class MusicaViewModel : ViewModel() {
         guardarMusicas(context)
     }
 
-    fun removerMusica(musica: Musica) {
+    fun removerMusica(context: Context, musica: Musica) {
         listaMusicas.remove(musica)
+        guardarMusicas(context)
     }
 
     fun selecionarMusica(musica: Musica) {
@@ -49,9 +49,9 @@ class MusicaViewModel : ViewModel() {
     }
 
     fun carregarMusicas(context: Context) {
-        val dataStore = MusicaDataStore(context)
+        val dataStore =  MusicaDataStore(context)
         viewModelScope.launch {
-            dataStore.obterMusicas().collect { musicas ->
+            dataStore.obterMusicas().collect { musicas: List<Musica> ->
                 listaMusicas.clear()
                 listaMusicas.addAll(musicas)
                 proximoId = (listaMusicas.maxOfOrNull { it.id } ?: 0) + 1
@@ -77,6 +77,5 @@ class MusicaViewModel : ViewModel() {
     fun limparSelecao() {
         musicaSelecionada = null
     }
-
 }
 

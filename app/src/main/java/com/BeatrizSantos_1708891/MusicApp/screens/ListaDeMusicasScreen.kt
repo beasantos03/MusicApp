@@ -2,20 +2,19 @@ package com.BeatrizSantos_1708891.MusicApp.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 import com.BeatrizSantos_1708891.MusicApp.data.Musica
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.ui.graphics.Color
-
+import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,6 +22,8 @@ fun ListaDeMusicasScreen(
     navController: NavController,
     viewModel: MusicaViewModel
 ) {
+    val context = LocalContext.current // <--- necessário para guardar alterações
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Lista de Músicas") })
@@ -44,14 +45,24 @@ fun ListaDeMusicasScreen(
                             navController.navigate("detalhes")
                         },
                         onDelete = {
-                            viewModel.removerMusica(musica)
+                            viewModel.removerMusica(context, musica) // <--- agora guarda a nova lista
                         },
                         onToggleFavorita = {
                             viewModel.alternarFavorita(musica)
+                            viewModel.guardarMusicas(context) // também guarda se mudar favorito
                         }
                     )
-                    HorizontalDivider(color = Color.LightGray)
+                    Divider(color = Color.LightGray)
                 }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { navController.navigate("menu") },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Voltar ao Menu Principal")
             }
         }
     }

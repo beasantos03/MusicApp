@@ -2,14 +2,23 @@ package com.BeatrizSantos_1708891.MusicApp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 
 @Composable
-fun MenuPrincipalScreen(navController: NavHostController) {
+fun MenuPrincipalScreen(navController: NavHostController, viewModel: MusicaViewModel) {
+    val context = LocalContext.current
+
+    // Carrega as músicas guardadas ao iniciar o ecrã
+    LaunchedEffect(Unit) {
+        viewModel.carregarMusicas(context)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

@@ -13,7 +13,7 @@ import com.BeatrizSantos_1708891.MusicApp.screens.MenuPrincipalScreen
 fun AppNavigation(navController: NavHostController, viewModel: MusicaViewModel) {
     NavHost(navController = navController, startDestination = "menu") {
         composable("menu") {
-            MenuPrincipalScreen(navController)
+            MenuPrincipalScreen(navController, viewModel)
         }
         composable("lista") {
             ListaDeMusicasScreen(navController = navController, viewModel = viewModel)
