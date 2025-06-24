@@ -1,16 +1,19 @@
-package com.BeatrizSantos_1708891.musicapp.screens
+package com.BeatrizSantos_1708891.MusicApp.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalhesMusicaScreen(
+    navController: NavController,
     viewModel: MusicaViewModel
 ) {
     val musica = viewModel.musicaSelecionada
@@ -28,12 +31,13 @@ fun DetalhesMusicaScreen(
                     .padding(padding)
                     .padding(16.dp)
                     .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Título: ${musica.titulo}", style = MaterialTheme.typography.titleMedium)
-                Text(text = "Artista: ${musica.artista}", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "Género: ${musica.genero}", style = MaterialTheme.typography.bodyLarge)
-                Text(text = "Ano: ${musica.ano}", style = MaterialTheme.typography.bodyLarge)
+                Text("Título: ${musica.titulo}", style = MaterialTheme.typography.titleLarge)
+                Text("Artista: ${musica.artista}")
+                Text("Género: ${musica.genero}")
+                Text("Ano: ${musica.ano}")
+                Text("Avaliação: ${musica.avaliacao} / 5")
             }
         } else {
             Box(
@@ -46,6 +50,10 @@ fun DetalhesMusicaScreen(
             }
         }
     }
-}
 
+    // Limpar seleção assim que este ecrã for aberto
+    LaunchedEffect(Unit) {
+        viewModel.limparSelecao()
+    }
+}
 

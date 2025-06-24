@@ -5,6 +5,7 @@ data class Musica(
     val titulo: String,
     val artista: String,
     val genero: String,
+    val ano: Int,
     val avaliacao: Int,
-    val ano: Int
+    val favorita: Boolean = false // <- NOVO campo
 )

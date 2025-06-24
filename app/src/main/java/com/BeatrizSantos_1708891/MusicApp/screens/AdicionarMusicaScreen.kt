@@ -1,5 +1,6 @@
 package com.BeatrizSantos_1708891.MusicApp.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
@@ -18,10 +20,12 @@ fun AdicionarMusicaScreen(
     navController: NavHostController,
     viewModel: MusicaViewModel
 ) {
+    val context = LocalContext.current
+
     var titulo by remember { mutableStateOf("") }
     var artista by remember { mutableStateOf("") }
     var genero by remember { mutableStateOf("") }
-    var ano by remember { mutableStateOf("") } // <- Novo campo
+    var ano by remember { mutableStateOf("") }
     var avaliacao by remember { mutableStateOf(0) }
 
     Scaffold(
@@ -86,13 +90,17 @@ fun AdicionarMusicaScreen(
                     val anoInt = ano.toIntOrNull() ?: 0
                     if (titulo.isNotBlank() && artista.isNotBlank() && genero.isNotBlank() && anoInt > 0) {
                         viewModel.adicionarMusica(
+                            context = context, // <- para guardar no DataStore
                             titulo = titulo,
                             artista = artista,
                             genero = genero,
                             avaliacao = avaliacao,
                             ano = anoInt
                         )
+                        Toast.makeText(context, "Música adicionada com sucesso!", Toast.LENGTH_SHORT).show()
                         navController.navigate("lista")
+                    } else {
+                        Toast.makeText(context, "Preenche todos os campos corretamente.", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -102,4 +110,5 @@ fun AdicionarMusicaScreen(
         }
     }
 }
+
 

@@ -11,6 +11,10 @@ import androidx.navigation.NavController
 import com.BeatrizSantos_1708891.MusicApp.viewmodel.MusicaViewModel
 import com.BeatrizSantos_1708891.MusicApp.data.Musica
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.ui.graphics.Color
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,9 +45,12 @@ fun ListaDeMusicasScreen(
                         },
                         onDelete = {
                             viewModel.removerMusica(musica)
+                        },
+                        onToggleFavorita = {
+                            viewModel.alternarFavorita(musica)
                         }
                     )
-                    HorizontalDivider()
+                    HorizontalDivider(color = Color.LightGray)
                 }
             }
         }
@@ -54,7 +61,8 @@ fun ListaDeMusicasScreen(
 fun MusicaItem(
     musica: Musica,
     onClick: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onToggleFavorita: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -68,6 +76,14 @@ fun MusicaItem(
             Text(text = "Artista: ${musica.artista}")
             Text(text = "Género: ${musica.genero}")
             Text(text = "Avaliação: ${musica.avaliacao}/5")
+        }
+
+        IconButton(onClick = onToggleFavorita) {
+            Icon(
+                imageVector = if (musica.favorita) Icons.Filled.Star else Icons.Outlined.Star,
+                contentDescription = "Favorita",
+                tint = MaterialTheme.colorScheme.primary
+            )
         }
 
         Button(onClick = onDelete) {
