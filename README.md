@@ -21,8 +21,4 @@ Aplicação Android desenvolvida em **Kotlin** com **Jetpack Compose**, para ges
 - Navigation
 - Git e GitHub
 
-## 🚀 Como correr a aplicação
 
-1. Clona este repositório:
-```bash
-git clone https://github.com/teu-utilizador/MusicApp.git
